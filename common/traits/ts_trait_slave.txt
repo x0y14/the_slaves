@@ -23,4 +23,5 @@
 
 	birth = 0
 	random_creation_weight = 0
+	shown_in_ruler_designer = no
 }

@@ -1,0 +1,5 @@
+﻿l_english:
+  building_type_slave_market_01:0 "Slave Market"
+  building_type_slave_market_01_desc:1 "TODO DESC OF $building_type_slave_market_01$"
+  building_slave_market_01:0 "$building_type_slave_market_01$"
+  building_slave_market_01_desc:0 "$building_type_slave_market_01_desc$"

@@ -1,0 +1,14 @@
+﻿on_game_start = {
+	on_actions = {
+		add_slave_market_buildings
+	}
+}
+
+add_slave_market_buildings = {
+	effect = {
+		# HELP: How to check if duchy-building slot is empty
+		title:b_bukhara.title_province = {
+			add_building = slave_market_01
+		}
+	}
+}

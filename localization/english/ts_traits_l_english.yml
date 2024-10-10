@@ -1,0 +1,4 @@
+﻿l_english:
+  trait_slave:0 "Slave"
+  trait_slave_desc:0 "This character is bound by servitude."
+  trait_slave_character_desc:0 "[ROOT.GetCharacter.GetFirstNameNoTooltip] is bound by servitude"

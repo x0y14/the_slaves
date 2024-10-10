@@ -3,4 +3,4 @@ tags={
 	"Historical"
 }
 name="The Slaves"
-supported_version="1.13.1.1"
+supported_version="1.13.1.*"

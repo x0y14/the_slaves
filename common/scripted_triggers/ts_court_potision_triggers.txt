@@ -1,0 +1,17 @@
+﻿# Mudir
+mudir_validity_trigger = {
+	base_court_position_validity_trigger = { EMPLOYER = $EMPLOYER$ }
+	is_playable_character = no
+	has_no_particular_noble_roots_trigger = yes
+
+	can_be_combatant_based_on_gender_trigger = { ARMY_OWNER = $EMPLOYER$ } # check culture of warrior not liege
+	is_adult = yes
+	is_landed = no #A requirement for inspirations
+
+	faith.religion = religion:islam_religion
+
+	custom_tooltip = {
+		text = IS_NOT_THE_SPOUSE_OF_CHARACTER_COURT_POSITION
+		NOT = { is_spouse_of = $EMPLOYER$ }
+	}
+}

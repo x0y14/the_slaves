@@ -1,0 +1,400 @@
+﻿# Mudir
+# - 役割 ムディールは訓練施設の所長または責任者として機能した。この人物はマムルーク人の教育と軍事訓練を監督する責任があった。
+# - 責任***： カリキュラムを管理し、マムルーク人が戦闘と軍事戦略に関する適切な訓練を受けられるようにした。
+mudir_court_position = {
+    max_available_positions = 1
+	category = court_position_category_special
+	minimum_rank = duchy
+	skill = martial
+
+	opinion = {
+		value = regular_court_position_opinion
+	}
+
+	# How high the aptitude has to be to reach the 5 different modifier levels
+	aptitude_level_breakpoints = { 20 40 60 80 }
+
+	# How good is this character in this position? root scope is the holder of the court position
+	aptitude = {
+		value = 1
+		add = {
+			value = martial
+			multiply = 4
+			max = 50
+			desc = court_position_skill_martial
+		}
+
+		if = {
+			limit = {
+				has_trait = shieldmaiden
+			}
+			add = {
+				value = 5
+				desc = court_position_shieldmaiden_trait
+			}
+		}
+		if = {
+			limit = {
+				has_trait = gallant
+			}
+			add = {
+				value = 5
+				desc = court_position_gallant_trait
+			}
+		}
+		if = {
+			limit = {
+				has_trait = strong
+			}
+			add = {
+				value = 10
+				desc = court_position_strong_trait
+			}
+		}
+		if = {
+			limit = {
+				has_trait = physique_good_3
+			}
+			add = {
+				value = 15
+				desc = court_position_physique_good_3_trait
+			}
+		}
+		if = {
+			limit = {
+				has_trait = physique_good_2
+			}
+			add = {
+				value = 10
+				desc = court_position_physique_good_2_trait
+			}
+		}
+		if = {
+			limit = {
+				has_trait = physique_good_1
+			}
+			add = {
+				value = 5
+				desc = court_position_physique_good_1_trait
+			}
+		}
+		if = {
+			limit = {
+				has_trait = brave
+			}
+			add = {
+				value = 15
+				desc = court_position_brave_trait
+			}
+		}
+		if = {
+			limit = {
+				has_trait = loyal
+			}
+			add = {
+				value = 10
+				desc = court_position_loyal_trait
+			}
+		}
+		if = {
+			limit = {
+				has_trait = just
+			}
+			add = {
+				value = 10
+				desc = court_position_just_trait
+			}
+		}
+		if = {
+			limit = {
+				has_trait = stubborn
+			}
+			add = {
+				value = 5
+				desc = court_position_stubborn_trait
+			}
+		}
+		if = {
+			limit = {
+				has_trait = honest
+			}
+			add = {
+				value = 10
+				desc = court_position_honest_trait
+			}
+		}
+		if = {
+			limit = {
+				has_trait = unyielding_defender
+			}
+			add = {
+				value = 10
+				desc = court_position_unyielding_defender_trait
+			}
+		}
+		if = {
+			limit = {
+				has_trait = varangian
+			}
+			add = {
+				value = 10
+				desc = court_position_varangian_trait
+			}
+		}
+
+		if = {
+			limit = {
+				has_trait = craven
+			}
+			add = {
+				value = -15
+				desc = court_position_craven_trait
+			}
+		}
+		if = {
+			limit = {
+				has_trait = fickle
+			}
+			add = {
+				value = -10
+				desc = court_position_fickle_trait
+			}
+		}
+		if = {
+			limit = {
+				has_trait = disloyal
+			}
+			add = {
+				value = -25
+				desc = court_position_disloyal_trait
+			}
+		}
+		if = {
+			limit = {
+				has_character_flag = best_knight_position
+			}
+			add = {
+				value = 20
+				desc = best_knight_position_desc
+			}
+		}
+		if = {
+			limit = {
+				has_character_flag = competing_knight_position
+				OR = {
+					any_court_position_holder = {
+						type = bodyguard_court_position
+						has_character_flag = competing_knight_position
+					}
+					any_court_position_holder = {
+						type = champion_court_position
+						has_character_flag = competing_knight_position
+					}
+				}
+			}
+			add = 30
+			desc = competing_knight_position_desc
+		}
+		add = court_position_aptitude_traveling_friends_value
+		add = court_position_aptitude_family_business_value
+		add = court_position_aptitude_high_penalty_value
+	}
+
+	# Is this an available position for this court? (root is court owner)
+	is_shown = {
+		NOT = { government_has_flag = government_is_landless_adventurer }
+		faith.religion = religion:islam_religion
+	}
+
+	valid_position = {
+		highest_held_title_tier >= tier_duchy
+	}
+
+	is_shown_character = {
+		scope:employee = {
+			is_courtier_of = scope:liege
+			mudir_validity_trigger = { EMPLOYER = scope:liege }
+		}
+	}
+
+	valid_character = {
+		scope:employee = {
+			liege ?= scope:liege # 
+			mudir_validity_trigger = { EMPLOYER = scope:liege }
+		}
+	}
+
+	revoke_cost = { # root is the liege, no other scopes are passed here!
+		prestige =  {
+			value = major_court_position_prestige_revoke_cost
+			# Set to 0 via obligation hook
+			if = {
+				limit = { 
+					court_position_obligation_hook_salary_trigger = {
+						POS = mudir
+						LIEGE = root
+					}
+				}
+				multiply = 0
+			}
+			# Avoid AI prestige issues
+			if = {
+				limit = {
+					exists = this
+					is_ai = yes
+				}
+				multiply = 0
+			}
+			# Special case for events
+			if = {
+				limit = {
+					exists = this
+					has_character_flag = free_revoke_cost
+				}
+				multiply = 0
+			}
+			#Lowering for LAAMPS, to match Camp Officer revoke cost
+			if = {
+				limit = { 
+					exists = this
+					is_landless_adventurer = yes
+				}
+				value = minor_court_position_prestige_revoke_cost
+			}
+		}
+	}
+
+	salary = {
+		round = no
+		gold = {
+			value = minor_court_position_salary # Update X_salary_tooltip if script_value is changed
+			# Set to 0 with Dynasty Perk Inner Circle
+			if = {
+				limit = { court_position_inner_circle_salary_trigger = { POS = mudir } }
+				multiply = {
+					value = 0.0
+					desc = inner_circle_salary_mod
+					format = "BASE_VALUE_FORMAT_DECIMALS_MINUS_POSITIVE"
+				}
+			}
+			# Halved via obligation hook
+			else_if = {
+				limit = { 
+					court_position_obligation_hook_salary_trigger = {
+						POS = mudir
+						LIEGE = scope:liege
+					}
+				}
+				multiply = {
+					value = 0.5
+					desc = obligation_hook_salary
+					format = "BASE_VALUE_FORMAT_DECIMALS_MINUS_POSITIVE"
+				}
+			}
+			# Halved salary
+			if = {
+				limit = {
+					court_position_halved_salary_trigger = { POS = mudir }
+				}
+				multiply = {
+					value = 0.5
+					desc = court_position_halved_salary
+					format = "BASE_VALUE_FORMAT_DECIMALS_MINUS_POSITIVE"
+				}
+			}
+			#You're working with LAAMPS now
+			if = {
+				limit = { 
+					scope:liege ?= { is_landless_adventurer = yes }
+				}
+				multiply = {
+					value = 0
+					desc = court_position_laamps_free
+					format = "BASE_VALUE_FORMAT_DECIMALS_MINUS_POSITIVE"
+				}
+			}
+		}
+	}
+
+	is_powerful_agent = yes
+
+	# These modifiers are employed based on what level the aptitude reaches (levels are defined as breakpoints)
+	scaling_employer_modifiers = {
+		terrible = {
+			monthly_court_grandeur_change_mult = 0.05
+			knight_effectiveness_mult = 0.01
+		}
+		poor = {
+			court_grandeur_baseline_add = 1
+			monthly_court_grandeur_change_mult = 0.5
+			knight_effectiveness_mult = 0.02
+		}
+		average = {
+			court_grandeur_baseline_add = 1
+			monthly_court_grandeur_change_mult = 0.10
+			knight_effectiveness_mult = 0.03
+		}
+		good = {
+			court_grandeur_baseline_add = 2
+			monthly_court_grandeur_change_mult = 0.15
+			knight_effectiveness_mult = 0.05
+		}
+		excellent = {
+			court_grandeur_baseline_add = 2
+			monthly_court_grandeur_change_mult = 0.20
+			knight_effectiveness_mult = 0.08
+		}
+	}
+
+	custom_employer_modifier_description = mudir_employer_custom_effect_description
+
+	modifier = {
+		monthly_prestige = medium_court_position_prestige_salary
+	}
+
+	on_court_position_received = {
+		mudir_title_accepted_effect = yes
+	}
+	on_court_position_revoked = {
+		mudir_title_revoked_effect = yes
+	}
+	on_court_position_invalidated = {
+		mudir_title_invalidated_effect = yes
+	}
+
+	# Scripted value to determine whether an AI will hire/fire a position or not. Hires over 0, fires under -50. Look in _court_positions.info for more extensive documentation!
+	candidate_score = {
+		value = 50
+		add = scope:base_value
+		add = court_position_candidate_score_base_value
+		add = court_position_candidate_aptitude_value
+		scope:liege = {
+			# More likely if you're scared all the time
+			if = {
+				limit = {
+					has_trait = paranoid
+				}
+				add = 50
+			}
+		}
+		scope:liege = {
+			# More likely if you're scared all the time
+			if = {
+				limit = {
+					number_maa_regiments_of_base_type = {
+						type = heavy_infantry
+						value >= 5
+					}
+				}
+				add = 50
+			}
+		}
+		if = { # To stop petitioned positions immediately being fired by the AI
+			limit = {
+				court_position_petition_ai_weight_trigger = { ROLE = mudir }
+			}
+			add = 1000
+		}
+		add = court_position_debt_considerations_value
+	}
+}
